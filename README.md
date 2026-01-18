@@ -1,157 +1,113 @@
-Phishing Detector Browser Extension 🛡️
+# 🛡️ Phishing Detector Browser Extension
 
-A lightweight, real-time browser extension that detects potential phishing websites using client-side heuristic analysis. This project analyzes URL characteristics and page content to calculate a risk score without sending your browsing history to external servers.
+![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue?style=for-the-badge&logo=google-chrome)
+![Language](https://img.shields.io/badge/JavaScript-ES6%2B-yellow?style=for-the-badge&logo=javascript)
+![Status](https://img.shields.io/badge/Status-Active_Development-green?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)
 
-📖 Project Overview
+> **A real-time, client-side browser extension that analyzes websites for phishing threats using heuristic algorithms.**
 
-Phishing Detector is designed to provide an immediate "first line of defense" against zero-day phishing attacks. Unlike traditional blacklists that rely on a database of known threats, this extension evaluates the behavior and structure of a webpage to determine if it is suspicious.
+---
 
-Key Features
+## 📖 Table of Contents
+- [About the Project](#-about-the-project)
+- [Key Features](#-key-features)
+- [How It Works (The Logic)](#-how-it-works-the-logic)
+- [Installation Guide](#-installation-guide)
+- [Project Structure](#-project-structure)
+- [Screenshots](#-screenshots)
+- [Future Scope](#-future-scope)
+- [License](#-license)
 
-Real-time Analysis: Scans every page immediately upon load.
+---
 
-Privacy First: All analysis happens locally on your device. No URLs are sent to the cloud.
+## 💡 About the Project
 
-Heuristic Detection: Uses a weighted scoring system based on common phishing tactics (e.g., IP addresses in URLs, password fields on HTTP).
+Phishing attacks are becoming increasingly sophisticated, often bypassing traditional blacklist filters. This project is a **Heuristic-Based Phishing Detection System** built as a Chrome Extension. 
 
-Visual Risk Assessment: Simple "Traffic Light" system (Green/Yellow/Red) to indicate safety.
+Unlike traditional antivirus tools that check a URL against a database of "known bad" sites, this extension analyzes the *behavior* and *structure* of the page itself in real-time. It calculates a risk score based on specific "red flags" (heuristics) to detect zero-day phishing attacks that haven't been reported yet.
 
-🛠️ Tech Stack
+**Note:** This project was developed as part of an NTCC academic initiative.
 
-Platform: Google Chrome Extension (Manifest V3)
+---
 
-Languages: HTML5, CSS3, JavaScript (ES6+)
+## ✨ Key Features
 
-Architecture: Service Worker (background.js), Content Script (content.js), Popup UI.
+* **Real-Time Analysis:** Scans the URL and page content immediately upon loading.
+* **Privacy-Focused:** All analysis happens locally on the client's browser. No browsing history is sent to external servers.
+* **Visual Risk Score:** Displays a simple "Traffic Light" system (Safe/Suspicious/Dangerous) with a calculated risk score (0-100).
+* **Detailed Threat Reporting:** Tells the user *exactly* why a site was flagged (e.g., "Non-HTTPS Connection" or "IP Address in URL").
+* **Lightweight:** Built on the modern Chrome Manifest V3 architecture for minimal performance impact.
 
-🚀 Installation Guide
+---
 
-Since this is a developer project, you will need to load it into Chrome manually.
+## 🧠 How It Works (The Logic)
 
-Clone or Download this repository to your local machine.
+The extension assigns a **Risk Score** to every website based on the following heuristics.
 
-Open Google Chrome and navigate to chrome://extensions.
+### 🔍 URL Analysis (Background Script)
+| Heuristic | Score Weight | Rationale |
+| :--- | :--- | :--- |
+| **IP Address in URL** | `+30` | Legitimate sites use domain names, not raw IPs (e.g., `192.168...`). |
+| **Non-HTTPS** | `+25` | Secure sites (especially login pages) must use SSL/TLS. |
+| **"@" Symbol** | `+20` | Often used to trick browsers and hide the actual destination domain. |
+| **Length > 75 chars** | `+15` | Attackers use long URLs to hide the domain in the address bar. |
+| **Excessive Subdomains** | `+15` | E.g., `login.paypal.com.secure-update.net`. |
+| **Sensitive Keywords** | `+10` | Presence of words like "login", "secure", "verify", "account". |
 
-Toggle "Developer mode" in the top-right corner.
+### 📄 Content Analysis (Content Script)
+| Heuristic | Score Weight | Rationale |
+| :--- | :--- | :--- |
+| **Password Field Found** | `+25` | A high-risk element. If found on a non-HTTPS site, the risk is critical. |
+| **iFrames Detected** | `+10` | Can be used to embed malicious content or fake login forms invisibly. |
 
-Click the "Load unpacked" button.
+### 🚦 Classification Thresholds
+* 🟢 **0 - 30:** **Safe** (No significant threats)
+* 🟡 **31 - 60:** **Suspicious** (Exercise caution)
+* 🔴 **61+:** **Dangerous** (High probability of phishing)
 
-Select the folder where you saved the project files (e.g., PhishingDetectorExtension).
+---
 
-The extension is now active! 🕵️
+## 🚀 Installation Guide
 
-🧠 How It Works (The Scoring Model)
+Since this is a developer project, it is not hosted on the Chrome Web Store yet. You can install it manually:
 
-The extension calculates a risk score (0-100) based on specific "red flags" found on the page.
+1.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/your-username/Phishing-Detector-Extension.git](https://github.com/your-username/Phishing-Detector-Extension.git)
+    ```
+    *(Or simply download the ZIP file and extract it)*.
 
-Thresholds
+2.  **Open Chrome Extensions:**
+    * Open Google Chrome.
+    * Type `chrome://extensions` in the address bar and press Enter.
 
-🟢 0 - 30: Safe
+3.  **Enable Developer Mode:**
+    * Toggle the switch named **"Developer mode"** in the top-right corner.
 
-🟡 31 - 60: Suspicious
+4.  **Load the Extension:**
+    * Click the **"Load unpacked"** button in the top-left.
+    * Select the folder where you saved the project files (e.g., `PhishingDetectorExtension`).
 
-🔴 61+: Dangerous
+5.  **Pin and Test:**
+    * Pin the extension to your toolbar.
+    * Visit a site to see it in action!
 
-Heuristic Rules
+---
 
-Component
+## 📂 Project Structure
 
-Rule
-
-Weight
-
-Reason
-
-Background
-
-IP Address in URL
-
-+30
-
-Legitimate sites rarely use raw IPs (e.g., 192.168...).
-
-Background
-
-No HTTPS
-
-+25
-
-Secure sites should always use SSL/TLS.
-
-Content
-
-Password Field
-
-+25
-
-High risk if combined with other flags (like No HTTPS).
-
-Background
-
-"@" Symbol
-
-+20
-
-Often used to obfuscate the real domain.
-
-Background
-
-Length > 75
-
-+15
-
-Long URLs try to hide the domain in the address bar.
-
-Background
-
-Subdomains > 3
-
-+15
-
-E.g., login.paypal.com.secure.update.net.
-
-Background
-
-Keywords
-
-+10
-
-Presence of "login", "secure", "verify", etc.
-
-Content
-
-iFrames
-
-+10
-
-Can be used to embed malicious forms invisibly.
-
-📂 Project Structure
-
-PhishingDetectorExtension/
-├── manifest.json       # Configuration and permissions
-├── background.js       # Service worker for URL analysis
-├── content.js          # Script injected into pages for DOM analysis
-├── popup.html          # Extension popup UI structure
-├── popup.css           # Styling for the popup
-├── popup.js            # Logic for displaying results
-└── icons/              # App icons
-
-
-⚠️ Disclaimer
-
-This tool is a heuristic analyzer. It is not 100% perfect.
-
-False Positives: A poorly designed legitimate website might be flagged as "Suspicious."
-
-False Negatives: A highly sophisticated phishing site might evade detection.
-
-Always use your best judgment when entering sensitive information online.
-
-🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-📄 License
-
-This project is open-source and available under the MIT License.
+```text
+Phishing-Detector-Extension/
+│
+├── manifest.json       # The configuration file (Permissions, V3 definition)
+├── background.js       # Service worker (Handles URL analysis & Logic)
+├── content.js          # Injected script (Handles DOM/HTML analysis)
+├── popup.html          # The HTML structure of the extension popup
+├── popup.css           # Styling for the popup UI
+├── popup.js            # Logic to display results to the user
+├── README.md           # Documentation
+└── icons/              # Folder containing app icons
+    ├── icon16.png
+    ├── icon48.png
+    └── icon128.png
