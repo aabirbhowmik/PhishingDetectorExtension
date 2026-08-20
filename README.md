@@ -15,9 +15,7 @@
 - [How It Works (The Logic)](#-how-it-works-the-logic)
 - [Installation Guide](#-installation-guide)
 - [Project Structure](#-project-structure)
-- [Screenshots](#-screenshots)
-- [Future Scope](#-future-scope)
-- [License](#-license)
+- [Author](#-author)
 
 ---
 
@@ -111,3 +109,11 @@ Phishing-Detector-Extension/
     ├── icon16.png
     ├── icon48.png
     └── icon128.png
+```
+# 👨‍💻 Author
+
+**Aabir Bhowmik**
+
+GitHub: https://github.com/aabirbhowmik
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
